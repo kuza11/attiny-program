@@ -1,0 +1,47 @@
+#include <SoftwareSerial.h>
+
+#define RX 3
+#define TX 4
+
+SoftwareSerial Serial(RX, TX);
+
+
+byte happy = 0;
+byte nothappy = 0;
+
+bool buttH;
+bool buttN;
+
+#define buttHPin 1
+// the setup routine runs once when you press reset:
+void setup() {
+  // initialize serial communication at 9600 bits per second:
+  Serial.begin(9600);
+}
+
+void sendData(byte good, byte bad) {
+  Serial.print('H');
+  Serial.print(good);
+  Serial.print('N');
+  Serial.print(bad);
+  Serial.print('*');
+  Serial.print(good + bad);
+  Serial.print('#');
+  Serial.print((good + bad)%11);
+  Serial.println();
+}
+
+// the loop routine runs over and over again forever:
+void loop() {
+  if (digitalRead(buttHPin) == true) {
+    buttH = true;
+  }
+  if (buttH == true && digitalRead(buttHPin) == false){
+    happy++;
+  }
+
+
+  sendData(happy, nothappy);
+  //Serial.println(sensorValue);
+  delay(50);        // delay in between reads for stability
+}
